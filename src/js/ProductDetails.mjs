@@ -1,4 +1,4 @@
-import { setLocalStorage, getParam } from "./utils.mjs";
+import { setLocalStorage } from "./utils.mjs";
 
 export default class ProductDetails {
   constructor(productId, dataSource) {
@@ -11,6 +11,12 @@ export default class ProductDetails {
     // fetch the product details using the id we stored earlier
     this.product = await this.dataSource.findProductById(this.productId);
 
+    if (!this.product) {
+      document.querySelector(".product-detail").innerHTML =
+        '<h2>Product not found</h2><p><a href="/">Browse our products</a></p>';
+      return;
+    }
+
     // now that we have the product data, render it to the page
     this.renderProductDetails();
 
@@ -21,6 +27,7 @@ export default class ProductDetails {
   }
 
   renderProductDetails() {
+    document.title = `Sleep Outside | ${this.product.Name}`;
     document.querySelector(".product-detail").innerHTML = `
         <h3>${this.product.Brand.Name}</h3>
         <h2 class="divider">${this.product.NameWithoutBrand}</h2>
